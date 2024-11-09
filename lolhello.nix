@@ -8,6 +8,6 @@ stdenv.mkDerivation {
   };
 
   patchPhase = ''
-    sed -i 's/Hello, world!/hello, Nix!/g' src/hello.c
+    sed -i 's/Hello, world!/hello, Rstats-on-nix!/g' src/hello.c
   '';
 }
