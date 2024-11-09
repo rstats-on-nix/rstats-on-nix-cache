@@ -1,0 +1,25 @@
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+name: push-to-cache
+
+permissions:
+  contents: read
+
+jobs:
+  devtools:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build lolhello.nix
+        run: nix-build lolhello.nix
+
+      - name: Push lolhello
+        run: export AWS_ACCESS_KEY_ID=${{ secrets.aws_access_key_id }} && export AWS_SECRET_ACCESS_KEY=${{ aws_secret_access_key }} && nix copy $(nix-store --query --requisites --include-outputs $(nix-store --query --deriver ./result)) --to 's3://rstats-on-nix-cache?profile=digitalocean&scheme=https&endpoint=fra1.digitaloceanspaces.com' --option narinfo-cache-positive-ttl 0
