@@ -26,14 +26,14 @@ jobs:
 
       - name: Create AWS Credentials File
         run: |
-          mkdir -p /root/.aws
-          echo "[digitalocean]" > /root/.aws/credentials
-          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /root/.aws/credentials
-          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /root/.aws/credentials
+          mkdir -p ~/.aws
+          echo "[digitalocean]" > ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
       - name: Move config file to right place
         run: |
-          mv config /root/.aws
+          mv config ~/.aws
 
       - name: Push lolhello
         run: |
