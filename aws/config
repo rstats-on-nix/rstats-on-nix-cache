@@ -1,0 +1,4 @@
+[digitalocean]
+region = us-east-1
+output = json
+endpoint_url = https://rstats-on-nix-cache.fra1.digitaloceanspaces.com

@@ -24,6 +24,17 @@ jobs:
       - name: Build lolhello.nix
         run: nix-build lolhello.nix
 
+      - name: Create AWS Credentials File
+        run: |
+          mkdir -p /root/.aws
+          echo "[digitalocean]" > /root/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> /root/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> /root/.aws/credentials
+
+      - name: Move config file to right place
+        run: |
+          mv config /root/.aws
+
       - name: Push lolhello
         run: |
-          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} && export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} && nix copy $(nix-store --query --requisites --include-outputs $(nix-store --query --deriver ./result)) --to 's3://rstats-on-nix-cache?profile=digitalocean&scheme=https&endpoint=fra1.digitaloceanspaces.com' --option narinfo-cache-positive-ttl 0
+          nix copy $(nix-store --query --requisites --include-outputs $(nix-store --query --deriver ./result)) --to 's3://rstats-on-nix-cache?profile=digitalocean&scheme=https&endpoint=fra1.digitaloceanspaces.com' --option narinfo-cache-positive-ttl 0
