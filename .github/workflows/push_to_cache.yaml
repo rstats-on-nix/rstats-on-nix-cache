@@ -33,7 +33,7 @@ jobs:
 
       - name: Move config file to right place
         run: |
-          mv config ~/.aws
+          mv aws/config ~/.aws
 
       - name: Push lolhello
         run: |
