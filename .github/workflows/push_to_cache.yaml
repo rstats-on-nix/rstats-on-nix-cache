@@ -35,6 +35,14 @@ jobs:
         run: |
           mv aws/config ~/.aws
 
+      - name: Create nix cache secret key file to sign packages
+        run: |
+          touch cache-priv-key.pem
+          echo "${{ secrets.NIX_CACHE_SECRET_KEY }}" >> cache-priv-key.pem
+
+      - name: Sign all store paths
+        run: nix sign-paths --all -k cache-priv-key.pem
+
       - name: Push lolhello
         run: |
           nix copy $(nix-store --query --requisites --include-outputs $(nix-store --query --deriver ./result)) --to 's3://rstats-on-nix-cache?profile=digitalocean&scheme=https&endpoint=fra1.digitaloceanspaces.com' --option narinfo-cache-positive-ttl 0
